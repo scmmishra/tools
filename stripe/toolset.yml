@@ -1,4 +1,4 @@
-version: 1
+version: 1.0.0
 kind: captain_toolset
 name: Stripe Support Tools
 description: Look up Stripe customers, payments, and subscriptions for support conversations.
@@ -10,7 +10,8 @@ secrets:
     required: true
 
 tools:
-  - title: Get Stripe Customer
+  - id: get_stripe_customer
+    title: Get Stripe Customer
     description: Retrieve a Stripe customer by ID and return support-relevant identity, contact, balance, and delinquency information.
     http_method: GET
     endpoint_url: https://api.stripe.com/v1/customers/{{ customer_id }}
@@ -22,27 +23,25 @@ tools:
         type: string
         description: The Stripe customer ID beginning with cus_.
         required: true
-    response_template: >-
-      Customer {{ response.id }}: name={{ response.name }}, email={{ response.email }}, phone={{ response.phone }}, balance={{ response.balance }}, currency={{ response.currency }}, delinquent={{ response.delinquent }}.
     enabled: true
 
-  - title: Get Stripe Payment
-    description: Retrieve a Stripe PaymentIntent by ID and return its amount, currency, status, customer, and description without exposing its client secret.
+  - id: get_stripe_charge
+    title: Get Stripe Charge
+    description: Retrieve a Stripe charge by ID with its amount, currency, status, customer, payment method, and refund information.
     http_method: GET
-    endpoint_url: https://api.stripe.com/v1/payment_intents/{{ payment_intent_id }}
+    endpoint_url: https://api.stripe.com/v1/charges/{{ charge_id }}
     auth_type: bearer
     auth_config:
       token: ${{ secrets.api_key }}
     param_schema:
-      - name: payment_intent_id
+      - name: charge_id
         type: string
-        description: The Stripe PaymentIntent ID beginning with pi_.
+        description: The Stripe charge ID beginning with ch_.
         required: true
-    response_template: >-
-      PaymentIntent {{ response.id }}: status={{ response.status }}, amount={{ response.amount }}, amount_received={{ response.amount_received }}, currency={{ response.currency }}, customer={{ response.customer }}, description={{ response.description }}.
     enabled: true
 
-  - title: Get Stripe Subscription
+  - id: get_stripe_subscription
+    title: Get Stripe Subscription
     description: Retrieve a Stripe subscription by ID and return its status, customer, currency, cancellation, and trial information.
     http_method: GET
     endpoint_url: https://api.stripe.com/v1/subscriptions/{{ subscription_id }}
@@ -54,6 +53,4 @@ tools:
         type: string
         description: The Stripe subscription ID beginning with sub_.
         required: true
-    response_template: >-
-      Subscription {{ response.id }}: status={{ response.status }}, customer={{ response.customer }}, currency={{ response.currency }}, cancel_at_period_end={{ response.cancel_at_period_end }}, canceled_at={{ response.canceled_at }}, trial_end={{ response.trial_end }}.
     enabled: true

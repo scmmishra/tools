@@ -1,4 +1,4 @@
-version: 1
+version: 1.0.0
 kind: captain_toolset
 name: Shopify Support Tools
 description: Look up Shopify orders and customers for support conversations.
@@ -22,27 +22,27 @@ secrets:
     required: true
 
 tools:
-  - title: Find Shopify Order
-    description: Find a Shopify order by its numeric order number and return support-relevant payment, fulfillment, customer, total, and line-item details.
-    http_method: POST
-    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/graphql.json
+  - id: get_shopify_order
+    title: Get Shopify Order
+    description: Retrieve a Shopify order by its numeric resource ID with its payment, fulfillment, customer, total, and line-item details.
+    http_method: GET
+    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/orders/{{ order_id }}.json
     auth_type: api_key
     auth_config:
       name: X-Shopify-Access-Token
       key: ${{ secrets.admin_api_access_token }}
     param_schema:
-      - name: order_number
+      - name: order_id
         type: integer
-        description: The numeric portion of the Shopify order number, for example 1001 for order #1001.
+        description: The numeric Shopify order resource ID, excluding the gid://shopify/Order/ prefix.
         required: true
-    request_template: >-
-      {"query":"query FindOrder { orders(first: 1, query: \"name:{{ order_number }}\") { nodes { id legacyResourceId name createdAt email displayFinancialStatus displayFulfillmentStatus currentTotalPriceSet { shopMoney { amount currencyCode } } customer { id displayName } lineItems(first: 10) { nodes { name quantity } } } } }"}
     enabled: true
 
-  - title: Get Shopify Customer
+  - id: get_shopify_customer
+    title: Get Shopify Customer
     description: Retrieve a Shopify customer by numeric ID with contact information, order count, and lifetime spend.
-    http_method: POST
-    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/graphql.json
+    http_method: GET
+    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/customers/{{ customer_id }}.json
     auth_type: api_key
     auth_config:
       name: X-Shopify-Access-Token
@@ -52,6 +52,4 @@ tools:
         type: integer
         description: The numeric Shopify customer ID, excluding the gid://shopify/Customer/ prefix.
         required: true
-    request_template: >-
-      {"query":"query GetCustomer { customer(id: \"gid://shopify/Customer/{{ customer_id }}\") { id legacyResourceId displayName firstName lastName email phone numberOfOrders amountSpent { amount currencyCode } } }"}
     enabled: true

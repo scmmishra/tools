@@ -1,16 +1,16 @@
 # Shopify Support Tools
 
-Read-only Shopify tools for looking up an order by number and retrieving a customer by Shopify's numeric customer ID. The tools use Shopify's GraphQL Admin API.
+Read-only Shopify tools for retrieving orders and customers by their numeric resource IDs. The tools use Shopify's REST Admin API so each lookup can be represented as a URL-only GET request.
 
 ## Included tools
 
-- **Find Shopify Order** — returns basic order, payment, fulfillment, customer, total, and line-item information for a numeric order number.
-- **Get Shopify Customer** — returns customer contact details, order count, and lifetime spend for a numeric customer ID.
+- **Get Shopify Order** (`get_shopify_order`) — sends a URL-only `GET` request to `/admin/api/{api_version}/orders/{order_id}.json` and returns order, payment, fulfillment, customer, total, and line-item information.
+- **Get Shopify Customer** (`get_shopify_customer`) — sends a URL-only `GET` request to `/admin/api/{api_version}/customers/{customer_id}.json` and returns customer contact details, order count, and lifetime spend.
 
 ## Requirements
 
 - A Shopify store domain such as `example.myshopify.com`.
-- A supported Shopify Admin API version. The manifest defaults to `2026-07`.
+- A supported Shopify Admin API version. The manifest shows `2026-07` as the input placeholder.
 - An Admin API access token sent through `X-Shopify-Access-Token`.
 - The `read_orders` and `read_customers` access scopes.
 
@@ -25,7 +25,9 @@ Shopify limits normal order access to the most recent 60 days. Looking up older 
 5. Enter a currently supported Admin API version and the access token.
 6. Review and enable the imported tools.
 
-Use the numeric portion of an order number, such as `1001` for order `#1001`. Customer IDs are the numeric legacy resource IDs visible in Shopify Admin URLs and API responses.
+Order and customer IDs are the numeric resource IDs visible in Shopify Admin URLs and API responses. An order ID is different from its customer-facing order name, such as `#1001`.
+
+Shopify classifies the REST Admin API as legacy. These tools use it because Captain catalog v1 supports URL-only requests and cannot represent a GraphQL POST body.
 
 ## Permissions and data
 
@@ -34,6 +36,6 @@ These tools read protected customer and order data. Only enable them when that d
 ## References
 
 - [Shopify API authentication](https://shopify.dev/docs/api/usage/authentication)
-- [GraphQL Admin API queries](https://shopify.dev/docs/apps/build/graphql/basics/queries)
-- [Orders query](https://shopify.dev/docs/api/admin-graphql/latest/queries/orders)
-- [Customer query](https://shopify.dev/docs/api/admin-graphql/latest/queries/customer)
+- [REST Admin API](https://shopify.dev/docs/api/admin-rest)
+- [Order resource](https://shopify.dev/docs/api/admin-rest/latest/resources/order)
+- [Customer resource](https://shopify.dev/docs/api/admin-rest/latest/resources/customer)
