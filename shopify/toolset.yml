@@ -1,0 +1,57 @@
+version: 1
+kind: captain_toolset
+name: Shopify Support Tools
+description: Look up Shopify orders and customers for support conversations.
+
+inputs:
+  shop_domain:
+    label: Shopify store domain
+    type: string
+    placeholder: example.myshopify.com
+    required: true
+  api_version:
+    label: Shopify Admin API version
+    type: string
+    placeholder: 2026-07
+    required: true
+
+secrets:
+  admin_api_access_token:
+    label: Admin API access token
+    type: password
+    required: true
+
+tools:
+  - title: Find Shopify Order
+    description: Find a Shopify order by its numeric order number and return support-relevant payment, fulfillment, customer, total, and line-item details.
+    http_method: POST
+    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/graphql.json
+    auth_type: api_key
+    auth_config:
+      name: X-Shopify-Access-Token
+      key: ${{ secrets.admin_api_access_token }}
+    param_schema:
+      - name: order_number
+        type: integer
+        description: The numeric portion of the Shopify order number, for example 1001 for order #1001.
+        required: true
+    request_template: >-
+      {"query":"query FindOrder { orders(first: 1, query: \"name:{{ order_number }}\") { nodes { id legacyResourceId name createdAt email displayFinancialStatus displayFulfillmentStatus currentTotalPriceSet { shopMoney { amount currencyCode } } customer { id displayName } lineItems(first: 10) { nodes { name quantity } } } } }"}
+    enabled: true
+
+  - title: Get Shopify Customer
+    description: Retrieve a Shopify customer by numeric ID with contact information, order count, and lifetime spend.
+    http_method: POST
+    endpoint_url: https://${{ inputs.shop_domain }}/admin/api/${{ inputs.api_version }}/graphql.json
+    auth_type: api_key
+    auth_config:
+      name: X-Shopify-Access-Token
+      key: ${{ secrets.admin_api_access_token }}
+    param_schema:
+      - name: customer_id
+        type: integer
+        description: The numeric Shopify customer ID, excluding the gid://shopify/Customer/ prefix.
+        required: true
+    request_template: >-
+      {"query":"query GetCustomer { customer(id: \"gid://shopify/Customer/{{ customer_id }}\") { id legacyResourceId displayName firstName lastName email phone numberOfOrders amountSpent { amount currencyCode } } }"}
+    enabled: true
