@@ -1,0 +1,43 @@
+version: 1.0.0
+kind: captain_toolset
+name: Linear Support Tools
+description: Look up Linear issues and recent issue activity for support conversations.
+
+secrets:
+  api_key:
+    label: Linear personal API key
+    type: password
+    required: true
+
+tools:
+  - id: get_linear_issue
+    title: Get Linear Issue
+    description: Retrieve a Linear issue by shorthand identifier or UUID with its status, assignee, team, priority, and timestamps.
+    http_method: POST
+    endpoint_url: https://api.linear.app/graphql
+    auth_type: api_key
+    auth_config:
+      name: Authorization
+      key: ${{ secrets.api_key }}
+    param_schema:
+      - name: issue_identifier
+        type: string
+        description: The Linear issue identifier, such as ENG-123, or its UUID.
+        required: true
+    request_template: >-
+      {"query":"query GetIssue($id: String!) { issue(id: $id) { id identifier title description priority createdAt updatedAt archivedAt state { id name } assignee { id name } team { id name } } }","variables":{"id":"{{ issue_identifier }}"}}
+    enabled: true
+
+  - id: list_recent_linear_issues
+    title: List Recent Linear Issues
+    description: List the ten most recently updated Linear issues visible to the API-key owner.
+    http_method: POST
+    endpoint_url: https://api.linear.app/graphql
+    auth_type: api_key
+    auth_config:
+      name: Authorization
+      key: ${{ secrets.api_key }}
+    param_schema: []
+    request_template: >-
+      {"query":"query RecentIssues { issues(first: 10, orderBy: updatedAt) { nodes { id identifier title priority createdAt updatedAt state { id name } assignee { id name } } } }"}
+    enabled: true

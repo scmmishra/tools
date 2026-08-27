@@ -6,8 +6,9 @@ This directory is a repository-ready collection of toolsets for [Captain](https:
 
 | Toolset | Description |
 | --- | --- |
-| [Shopify](./shopify/) | Look up Shopify orders and customers through the GraphQL Admin API. |
+| [Shopify](./shopify/) | Look up Shopify orders and customers through the REST Admin API. |
 | [Stripe](./stripe/) | Look up Stripe customers, payments, and subscriptions. |
+| [Linear](./linear/) | Look up Linear issues through the GraphQL API. |
 
 ## Install
 
