@@ -1,0 +1,63 @@
+version: 1.0.0
+kind: captain_toolset
+name: Better Stack Uptime Support Tools
+description: Check Better Stack monitors and uptime incidents during support conversations.
+
+secrets:
+  api_token:
+    label: Better Stack API token
+    type: password
+    required: true
+
+tools:
+  - id: list_betterstack_monitors
+    title: List Better Stack Monitors
+    description: List Better Stack uptime monitors with their current status, URL, check configuration, and latest check time.
+    http_method: GET
+    endpoint_url: https://uptime.betterstack.com/api/v2/monitors
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_token }}
+    param_schema: []
+    enabled: true
+
+  - id: get_betterstack_monitor
+    title: Get Better Stack Monitor
+    description: Retrieve a Better Stack uptime monitor by ID with its current status and monitoring configuration.
+    http_method: GET
+    endpoint_url: https://uptime.betterstack.com/api/v2/monitors/{{ monitor_id }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_token }}
+    param_schema:
+      - name: monitor_id
+        type: string
+        description: The Better Stack monitor identifier.
+        required: true
+    enabled: true
+
+  - id: list_active_betterstack_incidents
+    title: List Active Better Stack Incidents
+    description: List unresolved Better Stack incidents with their cause, status, affected monitor, and start time.
+    http_method: GET
+    endpoint_url: https://uptime.betterstack.com/api/v3/incidents?resolved=false
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_token }}
+    param_schema: []
+    enabled: true
+
+  - id: get_betterstack_incident
+    title: Get Better Stack Incident
+    description: Retrieve a Better Stack incident by ID with its cause, status, timeline, response details, and affected monitor.
+    http_method: GET
+    endpoint_url: https://uptime.betterstack.com/api/v3/incidents/{{ incident_id }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_token }}
+    param_schema:
+      - name: incident_id
+        type: string
+        description: The Better Stack incident identifier.
+        required: true
+    enabled: true

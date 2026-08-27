@@ -9,6 +9,8 @@ This directory is a repository-ready collection of toolsets for [Captain](https:
 | [Shopify](./shopify/) | Look up Shopify orders and customers through the REST Admin API. |
 | [Stripe](./stripe/) | Look up Stripe customers, payments, and subscriptions. |
 | [Linear](./linear/) | Look up Linear issues through the GraphQL API. |
+| [Statuspage](./statuspage/) | Check Statuspage incidents and component health. |
+| [Better Stack Uptime](./betterstack-uptime/) | Check Better Stack monitors and active incidents. |
 
 ## Install
 

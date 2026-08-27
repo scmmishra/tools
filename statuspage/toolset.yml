@@ -1,0 +1,58 @@
+version: 1.0.0
+kind: captain_toolset
+name: Statuspage Support Tools
+description: Check Atlassian Statuspage incidents and component health during support conversations.
+
+inputs:
+  page_id:
+    label: Statuspage page ID
+    type: string
+    placeholder: your-page-id
+    required: true
+
+secrets:
+  api_key:
+    label: Statuspage API key
+    type: password
+    required: true
+
+tools:
+  - id: list_statuspage_incidents
+    title: List Statuspage Incidents
+    description: List incidents for the configured status page, including their status, impact, updates, and affected components.
+    http_method: GET
+    endpoint_url: https://api.statuspage.io/v1/pages/${{ inputs.page_id }}/incidents
+    auth_type: api_key
+    auth_config:
+      name: Authorization
+      key: OAuth ${{ secrets.api_key }}
+    param_schema: []
+    enabled: true
+
+  - id: get_statuspage_incident
+    title: Get Statuspage Incident
+    description: Retrieve a Statuspage incident by ID with its current status, impact, updates, and affected components.
+    http_method: GET
+    endpoint_url: https://api.statuspage.io/v1/pages/${{ inputs.page_id }}/incidents/{{ incident_id }}
+    auth_type: api_key
+    auth_config:
+      name: Authorization
+      key: OAuth ${{ secrets.api_key }}
+    param_schema:
+      - name: incident_id
+        type: string
+        description: The Statuspage incident identifier.
+        required: true
+    enabled: true
+
+  - id: list_statuspage_components
+    title: List Statuspage Components
+    description: List the configured status page components and their current operational states.
+    http_method: GET
+    endpoint_url: https://api.statuspage.io/v1/pages/${{ inputs.page_id }}/components
+    auth_type: api_key
+    auth_config:
+      name: Authorization
+      key: OAuth ${{ secrets.api_key }}
+    param_schema: []
+    enabled: true
