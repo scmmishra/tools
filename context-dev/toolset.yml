@@ -1,0 +1,144 @@
+version: 1.0.0
+kind: captain_toolset
+name: Context.dev Support Tools
+description: Scrape pages, look up brand data, search the web, and check monitor status through the Context.dev API during support conversations.
+
+secrets:
+  api_key:
+    label: Context.dev API key (ctxt_secret_...)
+    type: password
+    required: true
+
+tools:
+  - id: scrape_page_markdown
+    title: Scrape Page Markdown
+    description: Scrape any URL into clean Markdown when a customer reports an issue with a page, references content Captain cannot open, or a landing or help page must be inspected during the conversation.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/web/scrape/markdown?url={{ page_url }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: page_url
+        type: string
+        description: The full URL to scrape, including the http:// or https:// protocol.
+        required: true
+    enabled: true
+
+  - id: capture_page_screenshot
+    title: Capture Page Screenshot
+    description: Capture a screenshot of a specific URL when a customer asks what a page currently looks like or a rendering issue must be verified visually. Returns a public image URL for the capture.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/web/screenshot?directUrl={{ page_url }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: page_url
+        type: string
+        description: The exact URL to screenshot directly, such as https://example.com/pricing.
+        required: true
+    enabled: true
+
+  - id: retrieve_brand_by_domain
+    title: Retrieve Brand by Domain
+    description: Retrieve brand data for a company domain, including logo, colors, description, socials, and industry, when support needs to identify or enrich the company a customer works for.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/brand/retrieve?domain={{ domain }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: domain
+        type: string
+        description: The company domain to look up, such as example.com.
+        required: true
+    enabled: true
+
+  - id: search_brands
+    title: Search Brands
+    description: Search indexed brands by name or domain when only a partial or misspelled company name is known and the exact domain must be resolved before further lookups.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/brand/search?query={{ query }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: query
+        type: string
+        description: The search term matched against brand names and domains, such as a partial company name.
+        required: true
+    enabled: true
+
+  - id: web_search
+    title: Web Search
+    description: Search the live web when a support question requires current public information such as a vendor release note, status page, or announcement that Captain has not seen.
+    http_method: POST
+    endpoint_url: https://api.context.dev/v1/web/search
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: query
+        type: string
+        description: The natural language or Google-style search query to run.
+        required: true
+    request_template: >-
+      {"query":"{{ query }}"}
+    enabled: true
+
+  - id: list_monitors
+    title: List Monitors
+    description: List the organization's Context.dev monitors with their target, status, and schedule when a support conversation starts and an overview of what is being watched is needed.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/monitors
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema: []
+    enabled: true
+
+  - id: get_monitor
+    title: Get Monitor
+    description: Retrieve a single monitor's full configuration, status, schedule, and baseline when a customer asks why a monitor fired or how it is currently configured.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/monitors/{{ monitor_id }}
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: monitor_id
+        type: string
+        description: The identifier of the monitor to retrieve, starting with mon_.
+        required: true
+    enabled: true
+
+  - id: list_monitor_runs
+    title: List Monitor Runs
+    description: List a monitor's run history with status, timing, and credits charged when a customer asks whether a monitor ran, how often it runs, or why a run failed.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/monitors/{{ monitor_id }}/runs
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: monitor_id
+        type: string
+        description: The identifier of the monitor whose runs should be listed, starting with mon_.
+        required: true
+    enabled: true
+
+  - id: list_monitor_changes
+    title: List Monitor Changes
+    description: List the changes a monitor has detected, with timestamps, when a customer asks what changed on a watched page or when a given change was first detected.
+    http_method: GET
+    endpoint_url: https://api.context.dev/v1/monitors/{{ monitor_id }}/changes
+    auth_type: bearer
+    auth_config:
+      token: ${{ secrets.api_key }}
+    param_schema:
+      - name: monitor_id
+        type: string
+        description: The identifier of the monitor whose detected changes should be listed, starting with mon_.
+        required: true
+    enabled: true

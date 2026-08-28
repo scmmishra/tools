@@ -11,6 +11,7 @@ This directory is a repository-ready collection of toolsets for [Captain](https:
 | [Linear](./linear/) | Look up Linear issues through the GraphQL API. |
 | [Statuspage](./statuspage/) | Check Statuspage incidents and component health. |
 | [Better Stack Uptime](./betterstack-uptime/) | Check Better Stack monitors and active incidents. |
+| [Context.dev](./context-dev/) | Scrape pages, look up brand data, search the web, and check monitor status through the Context.dev API. |
 
 ## Install
 
