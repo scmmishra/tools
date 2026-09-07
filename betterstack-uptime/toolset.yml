@@ -1,6 +1,7 @@
 version: 1.0.0
 kind: captain_toolset
 name: Better Stack Uptime Support Tools
+category: Engineering & status
 description: Check Better Stack monitors and uptime incidents during support conversations.
 
 secrets:

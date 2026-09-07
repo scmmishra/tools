@@ -1,6 +1,7 @@
 version: 1.0.0
 kind: captain_toolset
 name: Linear Support Tools
+category: Engineering & status
 description: Look up Linear issues and recent issue activity for support conversations.
 
 secrets:
