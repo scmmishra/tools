@@ -1,6 +1,6 @@
 version: 1.0.0
 kind: captain_toolset
-name: Shopify Support Tools
+name: Shopify
 category: Commerce
 description: Look up Shopify orders and customers for support conversations.
 
