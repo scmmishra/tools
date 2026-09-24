@@ -1,6 +1,6 @@
 version: 1.0.0
 kind: captain_toolset
-name: Statuspage Support Tools
+name: Statuspage
 category: Engineering & status
 description: Check Atlassian Statuspage incidents and component health during support conversations.
 
