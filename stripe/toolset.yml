@@ -1,6 +1,6 @@
 version: 1.0.0
 kind: captain_toolset
-name: Stripe Support Tools
+name: Stripe
 category: Payments & billing
 description: Look up Stripe customers, payments, and subscriptions for support conversations.
 
