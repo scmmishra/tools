@@ -1,6 +1,6 @@
 version: 1.0.0
 kind: captain_toolset
-name: Context.dev Support Tools
+name: Context.dev
 category: Business data & research
 description: Scrape pages, look up brand data, search the web, and check monitor status through the Context.dev API during support conversations.
 
